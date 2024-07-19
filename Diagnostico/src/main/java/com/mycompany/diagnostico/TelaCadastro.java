@@ -4,6 +4,9 @@
  */
 package com.mycompany.diagnostico;
 
+import java.util.ArrayList; // Importe a classe ArrayList
+import java.util.List; // Importe a classe List
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,6 +15,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,12 +27,34 @@ import javax.swing.table.DefaultTableModel;
  * @author 05750329011
  */
 public class TelaCadastro extends javax.swing.JFrame {
-
+private List<String> sintomasDoenca = new ArrayList<>();
     /**
      * Creates new form TelaCadastro
      */
     public TelaCadastro() {
         initComponents();
+       
+        try {
+
+        Connection conexao = conectarBanco();   
+        String sql = "SELECT nome FROM sintomas";       
+        PreparedStatement pstmt = conexao.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+        
+        List<String> sintomas = new ArrayList<>();
+        while (rs.next()) {//pega elemento por elemento da table
+            String nomeSintoma = rs.getString("nome");
+                sintomas.add(nomeSintoma);//Adicionando em uma array para usos futuros
+                cbbx.addItem(nomeSintoma);//Adicionando na comboBox
+            
+        }
+         pstmt.close();
+        conexao.close();
+        
+        
+    } catch (SQLException ex) {
+        Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
 
     /**
@@ -51,10 +77,10 @@ public class TelaCadastro extends javax.swing.JFrame {
         txtTratamentos = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        cbbx = new javax.swing.JComboBox<>();
+        btnAdicionar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        JTable = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
         btnCadastrar = new javax.swing.JButton();
         btnLimpar = new javax.swing.JButton();
@@ -100,12 +126,17 @@ public class TelaCadastro extends javax.swing.JFrame {
 
         jLabel7.setText("Comente sobre as formas de tratamento.");
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cbbx.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jButton1.setText("Adicionar");
+        btnAdicionar.setText("Adicionar");
+        btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarActionPerformed(evt);
+            }
+        });
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        JTable.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        JTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -121,7 +152,7 @@ public class TelaCadastro extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(JTable);
 
         jButton2.setText("Remover");
 
@@ -161,9 +192,9 @@ public class TelaCadastro extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(181, 181, 181)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbbx, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
+                        .addComponent(btnAdicionar)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -198,8 +229,8 @@ public class TelaCadastro extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(cbbx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdicionar))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -259,55 +290,34 @@ public class TelaCadastro extends javax.swing.JFrame {
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         // TODO add your handling code here:
        
-        try {
-             String nome = txtNome.getText();
-        String definicao = txtDefinicao.getText();
-        String observacoes = txtObservacoes.getText();
-        String tratamentos = txtTratamentos.getText();
+       try {
+           String nome = txtNome.getText();
+           String Definicao = txtDefinicao.getText();
+           String Observacoes = txtObservacoes.getText();
+           String Tratamentos = txtTratamentos.getText();
+        Connection conexao = conectarBanco();   
+        String sqlDoenca = "INSERT INTO doencas (nome, definicao, observacao, tratamentos) VALUES (?, ?, ?, ?)";  
         
-        Connection conexao = conectarBanco();
+        PreparedStatement pstmt = conexao.prepareStatement(sqlDoenca);
         
-        String sql = "SELECT * FROM sintomas WHERE nome = ?";
+        pstmt.setString(1, nome);
+        pstmt.setString(2, Definicao);
+        pstmt.setString(3, Observacoes);
+        pstmt.setString(4, Tratamentos);
         
-        // Criando um PreparedStatement com a consulta SQL
-        PreparedStatement pstmt = conexao.prepareStatement(sql);
-        
-        // Definindo o parâmetro da consulta
-        pstmt.setString(1, "Febre");
-        
-        ResultSet rs = pstmt.executeQuery();
-        
-        // Processando os resultados da consulta
-        while (rs.next()) {
-            // Recuperando os dados do resultado
-            String nomeSintoma = rs.getString("nome");
-             JTable jTable1 = new JTable();
-            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-      modelo.addRow(new Object[]{"Febre"});
-            // Exemplo de como usar os dados recuperados (pode ser adaptado conforme sua necessidade)
-            
-            
-        }
-        
-        
-        
-        
-        //pstmt.setString(1, tipoPessoa);
-        //pstmt.setString(2, tipoBicicleta);
-       // pstmt.setDouble(3, valorFinal);
-        //pstmt.setDate(4, dataInicioSql);
-       // pstmt.setDate(5, dataFimSql);
-        //pstmt.setLong(6, diferencaDias);
-        // Executando o insert
         pstmt.executeUpdate();
         
-        // Fechando recursos
-        pstmt.close();
+        for(int i = 0;i<sintomasDoenca.size();i++){
+            String sqlConexao = "INSERT INTO sintomas_doencas (id_sintoma, id_doenca) VALUES (?,?)";
+            pstmt = conexao.prepareStatement(sqlConexao);
+            pstmt.setString(1, sintomasDoenca.get(i));
+            pstmt.setString(2, nome);
+            pstmt.executeUpdate();
+        }
+         pstmt.close();
         conexao.close();
         
-        // Atualizando interface com mensagem de sucesso
-        JOptionPane.showMessageDialog(this, "Dados salvos com sucesso!");
-        
+        this.dispose();
     } catch (SQLException ex) {
         Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -316,6 +326,20 @@ public class TelaCadastro extends javax.swing.JFrame {
     private void txtObservacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtObservacoesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtObservacoesActionPerformed
+
+    private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
+        // TODO add your handling code here:
+        Object selecionado = cbbx.getSelectedItem();
+        String selecionadoConvertido = selecionado.toString();
+        DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+        
+        
+        sintomasDoenca.add(selecionadoConvertido);
+
+// Adicionando uma nova linha com a string "Febre" na coluna "sintomas"
+model.addRow(new Object[]{selecionado});
+
+    }//GEN-LAST:event_btnAdicionarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -359,11 +383,12 @@ public class TelaCadastro extends javax.swing.JFrame {
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable JTable;
+    private javax.swing.JButton btnAdicionar;
     private javax.swing.JButton btnCadastrar;
     private javax.swing.JButton btnLimpar;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> cbbx;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -372,7 +397,6 @@ public class TelaCadastro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField txtDefinicao;
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtObservacoes;

@@ -4,6 +4,16 @@
  */
 package com.mycompany.diagnostico;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author 05750329011
@@ -15,6 +25,26 @@ public class TelaEditar extends javax.swing.JFrame {
      */
     public TelaEditar() {
         initComponents();
+         try {
+
+        Connection conexao = conectarBanco();   
+        String sql = "SELECT nome FROM doencas";       
+        PreparedStatement pstmt = conexao.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+        
+        List<String> doencas = new ArrayList<>();
+        while (rs.next()) {//pega elemento por elemento da table
+            String nomeDoenca = rs.getString("nome");
+                cbbx.addItem(nomeDoenca);//Adicionando na comboBox
+            System.out.println(nomeDoenca);
+        }
+         pstmt.close();
+        conexao.close();
+        
+        
+    } catch (SQLException ex) {
+        Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
 
     /**
@@ -44,7 +74,7 @@ public class TelaEditar extends javax.swing.JFrame {
         btnSalvar = new javax.swing.JButton();
         btnDesfazer = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        cbbxSelecionar = new javax.swing.JComboBox<>();
+        cbbx = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -184,8 +214,12 @@ public class TelaEditar extends javax.swing.JFrame {
         btnDesfazer.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnDesfazer.setText("Desfazer");
 
-        cbbxSelecionar.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        cbbxSelecionar.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbbx.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        cbbx.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbbxActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel9.setText("Qual doença/infecção deseja editar?");
@@ -198,7 +232,7 @@ public class TelaEditar extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(195, 195, 195)
-                        .addComponent(cbbxSelecionar, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cbbx, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(154, 154, 154)
                         .addComponent(jLabel9)))
@@ -210,7 +244,7 @@ public class TelaEditar extends javax.swing.JFrame {
                 .addContainerGap(27, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addGap(18, 18, 18)
-                .addComponent(cbbxSelecionar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbbx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
         );
 
@@ -262,6 +296,12 @@ public class TelaEditar extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTratamentosActionPerformed
 
+    private void cbbxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbxActionPerformed
+        // TODO add your handling code here:
+        txtNome.setText("");
+        
+    }//GEN-LAST:event_cbbxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -295,12 +335,18 @@ public class TelaEditar extends javax.swing.JFrame {
                 new TelaEditar().setVisible(true);
             }
         });
+        
     }
-
+private Connection conectarBanco() throws SQLException {
+        String url = "jdbc:mysql://localhost:3306/diagnosticoJava";
+        String usuario = "root";
+        String senha = "root";
+        return DriverManager.getConnection(url,usuario,senha);
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDesfazer;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JComboBox<String> cbbxSelecionar;
+    private javax.swing.JComboBox<String> cbbx;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
