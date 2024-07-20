@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,9 +22,9 @@ import java.util.logging.Logger;
  */
 public class TelaEditar extends javax.swing.JFrame {
 
-    /**
-     * Creates new form TelaEditar
-     */
+   private List<String> sintomasDoenca = new ArrayList<>();
+   private List<String> sintomasVerificar = new ArrayList<>();
+     
     public TelaEditar() {
         initComponents();
          try {
@@ -45,6 +47,27 @@ public class TelaEditar extends javax.swing.JFrame {
     } catch (SQLException ex) {
         Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
     }
+         try {
+
+        Connection conexao = conectarBanco();   
+        String sql = "SELECT nome FROM sintomas";       
+        PreparedStatement pstmt = conexao.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
+        
+        List<String> sintomas = new ArrayList<>();
+        while (rs.next()) {//pega elemento por elemento da table
+            String nomeSintoma = rs.getString("nome");
+                sintomas.add(nomeSintoma);//Adicionando em uma array para usos futuros
+                cbbx1.addItem(nomeSintoma);//Adicionando na comboBox
+            
+        }
+         pstmt.close();
+        conexao.close();
+        
+        
+    } catch (SQLException ex) {
+        Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+    }
     }
 
     /**
@@ -57,20 +80,21 @@ public class TelaEditar extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        cbbx1 = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        btnAdicionar = new javax.swing.JButton();
         txtNome = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        JTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         txtDefinicao = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        txtSintomas = new javax.swing.JTextField();
+        txtObservacoes = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         txtTratamentos = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        scrollObservacoes = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         btnSalvar = new javax.swing.JButton();
         btnDesfazer = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -79,10 +103,40 @@ public class TelaEditar extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel7.setText("Comente sobre as formas de tratamento.");
+
+        cbbx1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Nome da Doença ou infecção:");
 
+        btnAdicionar.setText("Adicionar");
+        btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarActionPerformed(evt);
+            }
+        });
+
         txtNome.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+
+        JTable.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        JTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Sintomas"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(JTable);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Definição");
@@ -94,19 +148,19 @@ public class TelaEditar extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel3.setText("Sintomas");
+        jButton2.setText("Remover");
 
-        txtSintomas.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        txtSintomas.addActionListener(new java.awt.event.ActionListener() {
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel3.setText("Observações");
+
+        txtObservacoes.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        txtObservacoes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSintomasActionPerformed(evt);
+                txtObservacoesActionPerformed(evt);
             }
         });
 
         jLabel4.setText("Explique em poucas palavras a Doença ou infecção.");
-
-        jLabel5.setText("Liste os dintomas, separes-os com \",\".");
 
         txtTratamentos.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         txtTratamentos.addActionListener(new java.awt.event.ActionListener() {
@@ -118,31 +172,12 @@ public class TelaEditar extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel6.setText("Tratamentos");
 
-        jLabel7.setText("Comente sobre asformas de tratamento.");
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel8.setText("Observações");
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jTextArea1.setRows(5);
-        scrollObservacoes.setViewportView(jTextArea1);
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(115, 115, 115)
-                                .addComponent(jLabel5))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(275, 275, 275)
-                                .addComponent(jLabel8)))
-                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,25 +191,34 @@ public class TelaEditar extends javax.swing.JFrame {
                                 .addComponent(txtNome))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
+                                .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
                                         .addComponent(jLabel4)
                                         .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(6, 6, 6)
-                                        .addComponent(txtSintomas))))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(txtObservacoes, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(6, 6, 6)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addGap(6, 6, 6)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel7)
-                                            .addComponent(txtTratamentos, javax.swing.GroupLayout.PREFERRED_SIZE, 567, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(scrollObservacoes, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                    .addComponent(jLabel7)
+                                    .addComponent(txtTratamentos, javax.swing.GroupLayout.PREFERRED_SIZE, 567, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(181, 181, 181)
+                        .addComponent(cbbx1, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAdicionar)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(49, 49, 49))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,24 +236,31 @@ public class TelaEditar extends javax.swing.JFrame {
                 .addGap(4, 4, 4)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(txtSintomas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(txtObservacoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(txtTratamentos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
-                .addGap(32, 32, 32)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollObservacoes, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(35, 35, 35)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbbx1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdicionar))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         btnSalvar.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnSalvar.setText("Salvar alterações");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         btnDesfazer.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnDesfazer.setText("Desfazer");
@@ -256,16 +307,16 @@ public class TelaEditar extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(btnDesfazer, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSalvar)
-                .addGap(24, 24, 24))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(68, 68, 68)
+                .addComponent(btnDesfazer, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSalvar)
+                .addGap(55, 55, 55))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,38 +325,171 @@ public class TelaEditar extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnDesfazer, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addGap(18, 18, 18))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cbbxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbxActionPerformed
+
+         try {
+        String nomeDoenca = cbbx.getSelectedItem().toString();//seleciona o nome da doença para os selects
+        
+
+        Connection conexao = conectarBanco();
+        
+
+        String sql = "SELECT nome, definicao, observacao, tratamentos " +
+                     "FROM doencas " +
+                     "WHERE nome = ?";//pega de uma vez tudo que vou utilizar(sem contar os sintomas)
+        
+        PreparedStatement pstmt = conexao.prepareStatement(sql);
+        pstmt.setString(1, nomeDoenca);//preenche o ponto de interrogação
+        ResultSet rs = pstmt.executeQuery();
+        
+
+       
+
+            if (rs.next()) {
+
+            txtNome.setText(rs.getString("nome"));
+            txtDefinicao.setText(rs.getString("definicao"));
+            txtObservacoes.setText(rs.getString("observacao"));
+            txtTratamentos.setText(rs.getString("tratamentos"));//pega cada uma das informações que preciso, pegando a string de cada coluna e já preenche os campos.
+        }
+        
+        
+
+        String sqlSintomas = "SELECT sintoma.nome " +
+                             "FROM sintomas sintoma " +
+                             "JOIN sintomas_doencas sintomasDoencas ON sintoma.nome = sintomasDoencas.id_sintoma " +
+                             "JOIN doencas doenca ON sintomasDoencas.id_doenca = doenca.nome " +
+                             "WHERE doenca.nome = ?";//o select que pegara cada um dos sintomas
+        
+        PreparedStatement pstmtSintomas = conexao.prepareStatement(sqlSintomas);
+        pstmtSintomas.setString(1, nomeDoenca);//preenche o ponto de interrogação.
+        ResultSet rsSintomas = pstmtSintomas.executeQuery();
+        
+
+        DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+        model.setRowCount(0);//zera a tabela, para que quando ela for preenchida de nova, não haja cada vez mais rows
+        
+
+        while (rsSintomas.next()) {//pega cada sintoma conectado pela table sintomas_doencas e os insere na tabela do java.
+            String nomeSintoma = rsSintomas.getString("nome");
+            model.addRow(new Object[]{nomeSintoma});
+        }
+        
+
+        rs.close();
+        pstmt.close();
+        rsSintomas.close();
+        pstmtSintomas.close();
+        conexao.close();
+        
+    } catch (SQLException ex) {
+        Logger.getLogger(TelaEditar.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    }//GEN-LAST:event_cbbxActionPerformed
+
+    private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
+        Object selecionado = cbbx1.getSelectedItem();
+        String selecionadoConvertido = selecionado.toString();
+        DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+
+        verificar(selecionado);
+
+
+    }//GEN-LAST:event_btnAdicionarActionPerformed
+
     private void txtDefinicaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDefinicaoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtDefinicaoActionPerformed
 
-    private void txtSintomasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSintomasActionPerformed
+    private void txtObservacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtObservacoesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtSintomasActionPerformed
+    }//GEN-LAST:event_txtObservacoesActionPerformed
 
     private void txtTratamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTratamentosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTratamentosActionPerformed
 
-    private void cbbxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbbxActionPerformed
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
-        txtNome.setText("");
         
-    }//GEN-LAST:event_cbbxActionPerformed
+        try {
+             String nomeDoenca = cbbx.getSelectedItem().toString();
+             
+           String nome = txtNome.getText();
+           String Definicao = txtDefinicao.getText();
+           String Observacoes = txtObservacoes.getText();
+           String Tratamentos = txtTratamentos.getText();
+        Connection conexao = conectarBanco();   
+        String sqlAlterar = "UPDATE doencas " +
+                    "SET nome = ?, definicao = ?, observacao = ?, tratamentos = ? " +
+                    "WHERE nome = ?";
+        
+        PreparedStatement pstmt = conexao.prepareStatement(sqlAlterar);
+        
+        pstmt.setString(1, nome);
+        pstmt.setString(2, Definicao);
+        pstmt.setString(3, Observacoes);
+        pstmt.setString(4, Tratamentos);
+        pstmt.setString(5, Tratamentos);
+        
+        
+        
+        for (int i = 0; i < sintomasDoenca.size(); i++) {
+    String sqlConexao = "INSERT INTO sintomas_doencas (id_sintoma, id_doenca) VALUES (?,?)";
+    pstmt = conexao.prepareStatement(sqlConexao);
+    pstmt.setString(1, sintomasDoenca.get(i)); // Configura o primeiro parâmetro como id_sintoma
+    pstmt.setString(2, nome); // Configura o segundo parâmetro como id_doenca
+    pstmt.executeUpdate(); // Executa a inserção no banco de dados
+}
+        pstmt.executeUpdate();
+         pstmt.close();
+        conexao.close();
+        
+        this.dispose();
+    } catch (SQLException ex) {
+        Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
     /**
-     * @param args the command line arguments
+     * @param nome
      */
-    public static void main(String args[]) {
+    public void verificar(Object nome){
+         int rows = JTable.getRowCount();
+    
+    // Iterar pelas linhas da tabela
+    for(int i = 0; i < rows; i++){
+        // Obter o valor da célula na coluna 0 da linha atual
+        Object valorCelula = JTable.getValueAt(i, 0);
+        
+        // Comparar o valor atual com o nome recebido
+        if(nome.equals(valorCelula)){
+            JOptionPane.showMessageDialog(null,
+  "Sintoma já adicionado na doença.",
+  "Warning",
+  JOptionPane.WARNING_MESSAGE);
+            return; // Se já existe, não precisa adicionar novamente
+        }
+    }
+    
+    // Se chegou aqui, significa que o sintoma não está na tabela
+    DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+    model.addRow(new Object[]{nome}); // Adicionar o novo sintoma na tabela
+    
+    sintomasDoenca.add(nome.toString()); // Adicionar o novo sintoma na lista
+        System.out.println(sintomasDoenca);
+    }
+     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -319,13 +503,13 @@ public class TelaEditar extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TelaEditar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TelaEditar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TelaEditar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TelaEditar.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaCadastro.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -335,7 +519,6 @@ public class TelaEditar extends javax.swing.JFrame {
                 new TelaEditar().setVisible(true);
             }
         });
-        
     }
 private Connection conectarBanco() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/diagnosticoJava";
@@ -344,25 +527,26 @@ private Connection conectarBanco() throws SQLException {
         return DriverManager.getConnection(url,usuario,senha);
 }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable JTable;
+    private javax.swing.JButton btnAdicionar;
     private javax.swing.JButton btnDesfazer;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> cbbx;
+    private javax.swing.JComboBox<String> cbbx1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JScrollPane scrollObservacoes;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField txtDefinicao;
     private javax.swing.JTextField txtNome;
-    private javax.swing.JTextField txtSintomas;
+    private javax.swing.JTextField txtObservacoes;
     private javax.swing.JTextField txtTratamentos;
     // End of variables declaration//GEN-END:variables
 }
