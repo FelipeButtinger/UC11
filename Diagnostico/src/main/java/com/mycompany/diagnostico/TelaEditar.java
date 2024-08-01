@@ -24,6 +24,7 @@ public class TelaEditar extends javax.swing.JFrame {
 
    private List<String> sintomasDoenca = new ArrayList<>();
    private List<String> sintomasVerificar = new ArrayList<>();
+   private List<String> sintomasRemover = new ArrayList<>();//array criada para remover sintomas 
      
     public TelaEditar() {
         initComponents();
@@ -89,17 +90,17 @@ public class TelaEditar extends javax.swing.JFrame {
         JTable = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
         txtDefinicao = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        btnRemover = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         txtObservacoes = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtTratamentos = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         btnSalvar = new javax.swing.JButton();
-        btnDesfazer = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         cbbx = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -148,7 +149,12 @@ public class TelaEditar extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Remover");
+        btnRemover.setText("Remover");
+        btnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverActionPerformed(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Observações");
@@ -216,7 +222,7 @@ public class TelaEditar extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2)
+                    .addComponent(btnRemover)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(49, 49, 49))
         );
@@ -250,7 +256,7 @@ public class TelaEditar extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addComponent(btnRemover)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -262,9 +268,6 @@ public class TelaEditar extends javax.swing.JFrame {
             }
         });
 
-        btnDesfazer.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btnDesfazer.setText("Desfazer");
-
         cbbx.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         cbbx.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -274,6 +277,13 @@ public class TelaEditar extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel9.setText("Qual doença/infecção deseja editar?");
+
+        jButton1.setText("voltar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -286,13 +296,17 @@ public class TelaEditar extends javax.swing.JFrame {
                         .addComponent(cbbx, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(154, 154, 154)
-                        .addComponent(jLabel9)))
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addGap(18, 18, 18)
                 .addComponent(cbbx, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -312,9 +326,7 @@ public class TelaEditar extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(68, 68, 68)
-                .addComponent(btnDesfazer, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSalvar)
                 .addGap(55, 55, 55))
         );
@@ -326,9 +338,7 @@ public class TelaEditar extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnDesfazer, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
 
@@ -420,46 +430,89 @@ public class TelaEditar extends javax.swing.JFrame {
     }//GEN-LAST:event_txtTratamentosActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        // TODO add your handling code here:
+                                                 
+    try {
+        String nomeDoenca = cbbx.getSelectedItem().toString();
+        String nome = txtNome.getText();
+        String definicao = txtDefinicao.getText();
+        String observacoes = txtObservacoes.getText();
+        String tratamentos = txtTratamentos.getText();
         
-        try {
-             String nomeDoenca = cbbx.getSelectedItem().toString();
-             
-           String nome = txtNome.getText();
-           String Definicao = txtDefinicao.getText();
-           String Observacoes = txtObservacoes.getText();
-           String Tratamentos = txtTratamentos.getText();
-        Connection conexao = conectarBanco();   
-        String sqlAlterar = "UPDATE doencas " +
-                    "SET nome = ?, definicao = ?, observacao = ?, tratamentos = ? " +
-                    "WHERE nome = ?";
+        try (Connection conexao = conectarBanco()) {
+            // Atualizar a doença
+            String sqlAlterar = "UPDATE doencas SET nome = ?, definicao = ?, observacao = ?, tratamentos = ? WHERE nome = ?";
+            try (PreparedStatement pstmt = conexao.prepareStatement(sqlAlterar)) {
+                pstmt.setString(1, nome);
+                pstmt.setString(2, definicao);
+                pstmt.setString(3, observacoes);
+                pstmt.setString(4, tratamentos);
+                pstmt.setString(5, nomeDoenca);
+                pstmt.executeUpdate();
+            }
+            
+            // Remover sintomas retirados da jTable
+            for (String sintoma : sintomasRemover) {//cada sintoma da array
+                String sqlDelete = "DELETE FROM sintomas_doencas WHERE id_sintoma = ? AND id_doenca = ?";
+                try (PreparedStatement pstmt = conexao.prepareStatement(sqlDelete)) {
+                    pstmt.setString(1, sintoma);
+                    pstmt.setString(2, nomeDoenca);
+                    pstmt.executeUpdate();
+                }
+            }
+            
+            // Adicionar novos sintomas
+            for (String sintoma : sintomasDoenca) {
+                String sqlInsert = "INSERT INTO sintomas_doencas (id_sintoma, id_doenca) VALUES (?, ?)";
+                try (PreparedStatement pstmt = conexao.prepareStatement(sqlInsert)) {
+                    pstmt.setString(1, sintoma);
+                    pstmt.setString(2, nomeDoenca);
+                    pstmt.executeUpdate();
+                }
+            }
+        }
         
-        PreparedStatement pstmt = conexao.prepareStatement(sqlAlterar);
+        JOptionPane.showMessageDialog(this, "Alterações salvas com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         
-        pstmt.setString(1, nome);
-        pstmt.setString(2, Definicao);
-        pstmt.setString(3, Observacoes);
-        pstmt.setString(4, Tratamentos);
-        pstmt.setString(5, Tratamentos);
-        
-        
-        
-        for (int i = 0; i < sintomasDoenca.size(); i++) {
-    String sqlConexao = "INSERT INTO sintomas_doencas (id_sintoma, id_doenca) VALUES (?,?)";
-    pstmt = conexao.prepareStatement(sqlConexao);
-    pstmt.setString(1, sintomasDoenca.get(i)); // Configura o primeiro parâmetro como id_sintoma
-    pstmt.setString(2, nome); // Configura o segundo parâmetro como id_doenca
-    pstmt.executeUpdate(); // Executa a inserção no banco de dados
-}
-        pstmt.executeUpdate();
-         pstmt.close();
-        conexao.close();
-        
+         TelaMenu voltar = new TelaMenu();
+
+        voltar.setVisible(true);
         this.dispose();
+        
     } catch (SQLException ex) {
-        Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(TelaEditar.class.getName()).log(Level.SEVERE, null, ex);
+        JOptionPane.showMessageDialog(this, "Erro ao salvar alterações.", "Erro", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+        int selectedRow = JTable.getSelectedRow();
+ 
+        
+        String valorLinha = JTable.getValueAt(selectedRow, 0).toString();//aqui eu capturo o valor da linha a ser removida para tirar da array que adiciona no banco de dados
+        
+    if (selectedRow != -1) {
+        sintomasRemover.add(valorLinha);
+        System.out.println(sintomasRemover.get(0));
+        boolean removed = sintomasDoenca.remove(valorLinha);//Aqui é removido da arraylist
+        
+        DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+        model.removeRow(selectedRow);
+        
+       
+        JOptionPane.showMessageDialog(this, "Linha deletada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        
+        JOptionPane.showMessageDialog(this, "Por favor, selecione uma linha para deletar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+    }
+    }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        TelaMenu voltar = new TelaMenu();
+
+        voltar.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param nome
@@ -520,20 +573,20 @@ public class TelaEditar extends javax.swing.JFrame {
             }
         });
     }
-private Connection conectarBanco() throws SQLException {
+ private Connection conectarBanco() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/diagnosticoJava";
         String usuario = "root";
-        String senha = "root";
+        String senha = "31082021";
         return DriverManager.getConnection(url,usuario,senha);
 }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable JTable;
     private javax.swing.JButton btnAdicionar;
-    private javax.swing.JButton btnDesfazer;
+    private javax.swing.JButton btnRemover;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> cbbx;
     private javax.swing.JComboBox<String> cbbx1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

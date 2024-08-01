@@ -31,9 +31,10 @@ public class TelaMenu extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnCadastroSintomas = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
+        btnDiagnostico = new javax.swing.JButton();
+        btnCadastroDoencas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,52 +78,68 @@ public class TelaMenu extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jButton1.setText("Cadastro de Doenças");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCadastroSintomas.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnCadastroSintomas.setText("Cadastro de Sintomas");
+        btnCadastroSintomas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCadastroSintomasActionPerformed(evt);
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jButton2.setText("Editar Doenças e Sintomas");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnEditar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnEditar.setText("Editar Doenças e Sintomas");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnEditarActionPerformed(evt);
             }
         });
 
-        jButton3.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jButton3.setText("Diagnóstico");
+        btnDiagnostico.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnDiagnostico.setText("Diagnóstico");
+        btnDiagnostico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDiagnosticoActionPerformed(evt);
+            }
+        });
+
+        btnCadastroDoencas.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        btnCadastroDoencas.setText("Cadastro de Doenças");
+        btnCadastroDoencas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCadastroDoencasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnEditar)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(125, 125, 125)
-                        .addComponent(jButton2))
+                        .addGap(100, 100, 100)
+                        .addComponent(btnDiagnostico))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(225, 225, 225)
-                        .addComponent(jButton3))
+                        .addGap(35, 35, 35)
+                        .addComponent(btnCadastroSintomas))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jButton1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(35, 35, 35)
+                        .addComponent(btnCadastroDoencas)))
+                .addGap(125, 125, 125))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(53, Short.MAX_VALUE)
-                .addComponent(jButton1)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addComponent(btnCadastroSintomas)
+                .addGap(36, 36, 36)
+                .addComponent(btnCadastroDoencas)
                 .addGap(37, 37, 37)
-                .addComponent(jButton2)
+                .addComponent(btnEditar)
                 .addGap(38, 38, 38)
-                .addComponent(jButton3)
-                .addGap(34, 34, 34))
+                .addComponent(btnDiagnostico))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -149,13 +166,37 @@ public class TelaMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCadastroSintomasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroSintomasActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+         CadastroSintomas novo = new CadastroSintomas();
+        
+        novo.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnCadastroSintomasActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        TelaEditar novo = new TelaEditar();
+        
+        novo.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnCadastroDoencasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastroDoencasActionPerformed
+        // TODO add your handling code here:
+        TelaCadastro novo = new TelaCadastro();
+        
+        novo.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnCadastroDoencasActionPerformed
+
+    private void btnDiagnosticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDiagnosticoActionPerformed
+        // TODO add your handling code here:
+        Diagnostico novo = new Diagnostico();
+        
+        novo.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnDiagnosticoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -193,9 +234,10 @@ public class TelaMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnCadastroDoencas;
+    private javax.swing.JButton btnCadastroSintomas;
+    private javax.swing.JButton btnDiagnostico;
+    private javax.swing.JButton btnEditar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
