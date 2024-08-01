@@ -311,6 +311,15 @@ private List<String> sintomasDoenca = new ArrayList<>();
         // TODO add your handling code here:
        
        try {
+           
+           DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+        int rows = model.getRowCount();
+        if(rows<1){
+            JOptionPane.showMessageDialog(null,
+                "Adicione algum sintoma",
+                "Warning",
+                JOptionPane.WARNING_MESSAGE);
+        }else{
            String nome = txtNome.getText();
            String Definicao = txtDefinicao.getText();
            String Observacoes = txtObservacoes.getText();
@@ -344,14 +353,16 @@ private List<String> sintomasDoenca = new ArrayList<>();
     txtTratamentos.setText("");
     
     // Limpar a tabela
-    DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+     model = (DefaultTableModel) JTable.getModel();
     model.setRowCount(0);
     
     // Limpar a lista de sintomas
     sintomasDoenca.clear();
+        }
     } catch (SQLException ex) {
         Logger.getLogger(TelaCadastro.class.getName()).log(Level.SEVERE, null, ex);
     }
+       
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void txtObservacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtObservacoesActionPerformed
@@ -362,13 +373,13 @@ private List<String> sintomasDoenca = new ArrayList<>();
         // TODO add your handling code here:
         Object selecionado = cbbx.getSelectedItem();
         String selecionadoConvertido = selecionado.toString();
-        DefaultTableModel model = (DefaultTableModel) JTable.getModel();
-        
-        
-        sintomasDoenca.add(selecionadoConvertido);
+   
 
+        verificar(selecionado);
+
+        
 // Adicionando uma nova linha com a string "Febre" na coluna "sintomas"
-model.addRow(new Object[]{selecionado});
+
 
     }//GEN-LAST:event_btnAdicionarActionPerformed
 
@@ -450,10 +461,36 @@ model.addRow(new Object[]{selecionado});
             }
         });
     }
+    public void verificar(Object nome){
+          DefaultTableModel model = (DefaultTableModel) JTable.getModel();
+        int rows = model.getRowCount();
+        boolean exists = false;
+        
+        // Iterar pelas linhas da tabela
+        for (int i = 0; i < rows; i++) {
+            Object valorCelula = model.getValueAt(i, 0);
+            if (nome.equals(valorCelula)) {
+                exists = true;
+                break;
+            }
+        }
+        
+        if (exists) {
+            JOptionPane.showMessageDialog(null,
+                "Sintoma já adicionado na doença.",
+                "Warning",
+                JOptionPane.WARNING_MESSAGE);
+        } else {
+            model.addRow(new Object[]{nome});
+            sintomasDoenca.add(nome.toString());
+        }
+    
+   
+    }
      private Connection conectarBanco() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/diagnosticoJava";
         String usuario = "root";
-        String senha = "31082021";
+        String senha = "root";
         return DriverManager.getConnection(url,usuario,senha);
 }
 

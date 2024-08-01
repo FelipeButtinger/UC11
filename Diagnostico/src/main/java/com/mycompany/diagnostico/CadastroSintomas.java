@@ -209,10 +209,10 @@ public class CadastroSintomas extends javax.swing.JFrame {
             }
         });
     }
-    private Connection conectarBanco() throws SQLException {
+   private Connection conectarBanco() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/diagnosticoJava";
         String usuario = "root";
-        String senha = "31082021";
+        String senha = "root";
         return DriverManager.getConnection(url,usuario,senha);
 }
 
